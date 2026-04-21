@@ -52,9 +52,11 @@ The proxy will start on `http://localhost:4891`.
 
 ### Step 3: Configure ForgeCode
 
-Add the custom provider to your ForgeCode config. Edit `~/.forge/.forge.toml` (or `~/forge/.forge.toml` on legacy installs):
+Add the custom provider to your ForgeCode config. Edit `~/.forge/.forge.toml`:
 
 ```toml
+$schema https://forgecode.dev/schema.json
+
 [[providers]]
 id             = "gemini-cli"
 url            = "http://localhost:4891/v1/chat/completions"
@@ -152,6 +154,12 @@ This preview model has limited capacity. If you hit this error consistently, use
 
 ### ForgeCode can't connect to proxy
 Ensure the proxy is running (`curl http://localhost:4891/health` should return `{"status":"ok"}`).
+
+### Provider not showing up in `:login`
+1. Make sure `~/.forge/.forge.toml` exists and has the `[[providers]]` block.
+2. Make sure `~/.env` has `GEMINI_PROXY_KEY=dummy`.
+3. Restart ForgeCode (quit with `:quit` and run `forge` again).
+4. Run `:config-edit` inside ForgeCode to verify the config loaded correctly.
 
 ## Architecture Details
 
