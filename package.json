@@ -1,0 +1,26 @@
+{
+  "name": "gemini-forge-proxy",
+  "version": "1.0.0",
+  "description": "OpenAI-compatible proxy for Gemini CLI OAuth, enabling ForgeCode to use Gemini models via your existing Google account",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "gemini",
+    "forgecode",
+    "proxy",
+    "openai",
+    "oauth"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ai": "^6.0.168",
+    "ai-sdk-provider-gemini-cli": "^2.0.1",
+    "express": "^5.2.1",
+    "zod": "^4.3.6"
+  }
+}
