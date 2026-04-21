@@ -162,6 +162,3 @@ This proxy uses:
 
 The underlying API endpoint is `https://cloudcode-pa.googleapis.com/v1internal:generateContent` (or `streamGenerateContent` for streaming), which is Google's internal Code Assist API — the same endpoint the official Gemini CLI uses.
 
-## License
-
-MIT
