@@ -13,6 +13,45 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', provider: 'gemini-cli-oauth' });
 });
 
+// OpenAI-compatible model list endpoint
+app.get('/v1/models', (_req, res) => {
+  res.json({
+    object: 'list',
+    data: [
+      {
+        id: 'gemini-3.1-pro-preview',
+        object: 'model',
+        created: Math.floor(Date.now() / 1000),
+        owned_by: 'google',
+      },
+      {
+        id: 'gemini-3-pro-preview',
+        object: 'model',
+        created: Math.floor(Date.now() / 1000),
+        owned_by: 'google',
+      },
+      {
+        id: 'gemini-3-flash-preview',
+        object: 'model',
+        created: Math.floor(Date.now() / 1000),
+        owned_by: 'google',
+      },
+      {
+        id: 'gemini-2.5-pro',
+        object: 'model',
+        created: Math.floor(Date.now() / 1000),
+        owned_by: 'google',
+      },
+      {
+        id: 'gemini-2.5-flash',
+        object: 'model',
+        created: Math.floor(Date.now() / 1000),
+        owned_by: 'google',
+      },
+    ],
+  });
+});
+
 /**
  * Map OpenAI tools format to AI SDK tools format
  * OpenAI: [{ type: 'function', function: { name, description, parameters } }]
@@ -56,28 +95,28 @@ function mapMessages(messages) {
   return messages.map((msg) => {
     if (msg.role === 'tool') {
       return {
-        role: 'tool',
-        content: typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content),
-        toolCallId: msg.tool_call_id,
+        role: 'user',
+        content:
+          typeof msg.content === 'string'
+            ? `[Tool ${msg.name || 'tool'} result]\n${msg.content}`
+            : `[Tool ${msg.name || 'tool'} result]\n${JSON.stringify(msg.content)}`,
       };
     }
     if (msg.role === 'assistant' && msg.tool_calls) {
-      return {
-        role: 'assistant',
-        content: msg.content || '',
-        toolCalls: msg.tool_calls.map((tc) => ({
-          type: 'tool-call',
-          toolCallId: tc.id,
-          toolName: tc.function?.name,
-          args: JSON.parse(tc.function?.arguments || '{}'),
-        })),
-      };
+      if (msg.content) {
+        return {
+          role: 'assistant',
+          content: msg.content,
+        };
+      }
+
+      return null;
     }
     return {
       role: msg.role,
       content: msg.content,
     };
-  });
+  }).filter(Boolean);
 }
 
 /**
